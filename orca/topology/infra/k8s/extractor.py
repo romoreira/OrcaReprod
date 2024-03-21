@@ -416,7 +416,7 @@ class JobExtractor(Extractor):
         properties = {}
         properties["name"] = entity.metadata.name
         properties["namespace"] = entity.metadata.namespace
-       if entity.metadata.labels is not None:
+        if entity.metadata.labels is not None:
             properties["labels"] = entity.metadata.labels.copy()
         else:
             properties["labels"] = {}
