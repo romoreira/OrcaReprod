@@ -171,7 +171,10 @@ class ReplicaSetExtractor(Extractor):
         properties = {}
         properties["name"] = entity.metadata.name
         properties["namespace"] = entity.metadata.namespace
-        properties["labels"] = entity.metadata.labels.copy()
+        if entity.metadata.labels is not None:
+            properties["labels"] = entity.metadata.labels.copy()
+        else:
+            properties["labels"] = {}
         properties["replicas"] = entity.spec.replicas
         properties["selector"] = entity.spec.selector.match_labels
         return properties
@@ -189,7 +192,10 @@ class DaemonSetExtractor(Extractor):
         properties = {}
         properties["name"] = entity.metadata.name
         properties["namespace"] = entity.metadata.namespace
-        properties["labels"] = entity.metadata.labels.copy()
+        if entity.metadata.labels is not None:
+            properties["labels"] = entity.metadata.labels.copy()
+        else:
+            properties["labels"] = {}
         properties["selector"] = entity.spec.selector.match_labels
         return properties
 
@@ -206,7 +212,10 @@ class StatefulSetExtractor(Extractor):
         properties = {}
         properties["name"] = entity.metadata.name
         properties["namespace"] = entity.metadata.namespace
-        properties["labels"] = entity.metadata.labels.copy()
+        if entity.metadata.labels is not None:
+            properties["labels"] = entity.metadata.labels.copy()
+        else:
+            properties["labels"] = {}
         properties["replicas"] = entity.spec.replicas
         properties["selector"] = entity.spec.selector.match_labels
         return properties
@@ -352,9 +361,10 @@ class NamespaceExtractor(Extractor):
     def _extract_properties(self, entity):
         properties = {}
         properties["name"] = entity.metadata.name
-        properties["labels"] = None
-        if entity.metadata.labels:
+        if entity.metadata.labels is not None:
             properties["labels"] = entity.metadata.labels.copy()
+        else:
+            properties["labels"] = {}
         properties["phase"] = entity.status.phase
         return properties
 
@@ -406,7 +416,10 @@ class JobExtractor(Extractor):
         properties = {}
         properties["name"] = entity.metadata.name
         properties["namespace"] = entity.metadata.namespace
-        properties["labels"] = entity.metadata.labels.copy()
+       if entity.metadata.labels is not None:
+            properties["labels"] = entity.metadata.labels.copy()
+        else:
+            properties["labels"] = {}
         properties["selector"] = entity.spec.selector.match_labels
         properties["cron_job_ref"] = self._extract_references(entity)
         return properties
