@@ -1,0 +1,66 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "orca.fullname" . }}
+  labels:
+{{ include "orca.labels" . | indent 4 }}
+data:
+  orca.yaml: |-
+    graph:
+      driver: {{ .Values.graph.driver }}
+
+      arangodb:
+        enabled: {{ .Values.arangodb.enabled }}
+        host: {{ .Values.arangodb.host }}
+        port: {{ .Values.arangodb.port }}
+        username: {{ .Values.arangodb.username }}
+        password: {{ .Values.arangodb.password }}
+
+    topology:
+      alerts:
+        mapping_path: /etc/orca/alerts-mapping.yaml
+      gc:
+        interval: 60
+
+    probes:
+      kubernetes:
+        enabled: {{ .Values.probes.kubernetes.enabled }}
+        resync_period: {{ .Values.probes.kubernetes.resync_period }}
+
+      istio:
+        enabled: {{ .Values.probes.istio.enabled }}
+        resync_period: {{ .Values.probes.istio.resync_period }}
+
+      kiali:
+        enabled: {{ .Values.probes.kiali.enabled }}
+        url: {{ .Values.probes.kiali.url }}
+        username: {{ .Values.probes.kiali.username }}
+        password: {{ .Values.probes.kiali.password }}
+        resync_period: {{ .Values.probes.kiali.resync_period }}
+
+      prometheus:
+        enabled: {{ .Values.probes.prometheus.enabled }}
+        url: {{ .Values.probes.prometheus.url }}
+        resync_period: {{ .Values.probes.prometheus.resync_period }}
+
+      zabbix:
+        enabled: {{ .Values.probes.zabbix.enabled }}
+        url: {{ .Values.probes.zabbix.url }}
+        username: {{ .Values.probes.zabbix.username }}
+        password: {{ .Values.probes.zabbix.password }}
+        resync_period: {{ .Values.probes.zabbix.resync_period }}
+
+    ingestors:
+      prometheus:
+        enabled: {{ .Values.ingestors.prometheus.enabled }}
+
+      falco:
+        enabled: {{ .Values.ingestors.falco.enabled }}
+
+      elastalert:
+        enabled: {{ .Values.ingestors.elastalert.enabled }}
+
+    logging:
+      log_level: {{ .Values.logging.log_level }}
+
+{{ (.Files.Glob "config/alerts-mapping.yaml").AsConfig | indent 2 }}

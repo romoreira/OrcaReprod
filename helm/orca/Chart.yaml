@@ -1,0 +1,8 @@
+apiVersion: v1
+name: orca
+version: 0.2.0
+appVersion: 0.2.0
+description: Helm chart for OpenRCA
+keywords:
+  - orca
+  - openrca

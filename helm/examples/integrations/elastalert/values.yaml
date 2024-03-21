@@ -1,0 +1,109 @@
+image:
+  tag: 2.2.2
+
+fullnameOverride: "elastalert"
+
+elasticsearch:
+  host: "elasticsearch-client.logging"
+  port: 9200
+
+runIntervalMins: 1
+alertRetryLimitMins: 5
+realertIntervalMins: 15
+bufferTimeMins: 5
+writebackIndex: elastalert
+
+
+rules:
+  psmdb-host-failed-in-replica-set: |-
+    ---
+    name: MongoDBHostFailedInReplicaSet
+    type: frequency
+    index: filebeat*
+    num_events: 3
+    timeframe:
+      minutes: 1
+    filter:
+    - term:
+        "log_processed.msg": "Host failed in replica set"
+    query_key: "kubernetes.pod.name"
+    realert:
+      minutes: 1
+    alert:
+    - "post"
+    match_enhancements:
+    - "elastalert_modules.enhancements.MongoDBHostFailedInReplicaSet"
+    http_post_url: "http://orca.rca:5000/v1/ingestor/elastalert"
+    http_post_payload:
+      name: name
+    http_post_static_payload:
+      status: active
+      severity: error
+      message: "Host failed in Replica Set"
+    http_post_all_values: true
+
+  psmdb-heartbeat-failed: |-
+    ---
+    name: MongoDBHeartbeatFailed
+    type: frequency
+    index: filebeat*
+    num_events: 3
+    timeframe:
+      minutes: 1
+    filter:
+    - term:
+        "log_processed.msg": "Heartbeat failed after max retries"
+    query_key: "kubernetes.pod.name"
+    realert:
+      minutes: 1
+    alert:
+    - "post"
+    match_enhancements:
+    - "elastalert_modules.enhancements.MongoDBHeartbeatFailed"
+    http_post_url: "http://orca.rca:5000/v1/ingestor/elastalert"
+    http_post_payload:
+      name: name
+    http_post_static_payload:
+      status: active
+      severity: error
+      message: "Heartbeat failed after max retries"
+    http_post_all_values: true
+
+  hipster-cart-store-inaccessible: |-
+    ---
+    name: HipsterCartStoreInaccessible
+    type: frequency
+    index: filebeat*
+    num_events: 3
+    timeframe:
+      minutes: 1
+    filter:
+    - term:
+        "log_processed.message": "Unable to access cart storage"
+    query_key: "kubernetes.pod.name"
+    realert:
+      minutes: 1
+    alert:
+    - "post"
+    http_post_url: "http://orca.rca:5000/v1/ingestor/elastalert"
+    http_post_static_payload:
+      name: "HipsterCartStoreInaccessible"
+      status: active
+      severity: error
+      message: "Unable to access cart storage"
+
+extraVolumeMounts:
+  - name: enhancements
+    mountPath: /opt/elastalert/elastalert_modules
+extraVolumes:
+  - name: enhancements
+    configMap:
+      name: enhancements
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 100Mi
+  limits:
+    cpu: 1000m
+    memory: 1000Mi

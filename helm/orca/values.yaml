@@ -1,0 +1,97 @@
+replicaCount: 1
+
+image:
+  repository: openrca/orca
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+graph:
+  driver: arangodb
+
+arangodb:
+  enabled: true
+  host: arangodb
+  port: 8529
+  username: root
+  password: admin
+
+probes:
+  kubernetes:
+    enabled: true
+    resync_period: 900
+  istio:
+    enabled: false
+    resync_period: 900
+  kiali:
+    enabled: false
+    resync_period: 60
+    url:
+    username:
+    password:
+  prometheus:
+    enabled: false
+    resync_period: 60
+    url:
+  zabbix:
+    enabled: false
+    resync_period: 60
+    url:
+    username:
+    password:
+
+ingestors:
+  prometheus:
+    enabled: false
+  falco:
+    enabled: false
+  elastalert:
+    enabled: false
+
+logging:
+  log_level: info
+
+ui:
+  enabled: true

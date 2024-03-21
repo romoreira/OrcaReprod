@@ -1,0 +1,11 @@
+imageTag: "7.15.0"
+
+fullnameOverride: "kibana"
+
+resources:
+  requests:
+    cpu: 1000m
+    memory: 1000Mi
+  limits:
+    cpu: 2000m
+    memory: 2000Mi
