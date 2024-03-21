@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: openrca/orca
+  repository: moreirar/orca-v2
   tag: latest
   pullPolicy: IfNotPresent
 
