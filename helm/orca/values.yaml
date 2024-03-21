@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: moreirar/orca-v2
+  repository: moreirar/orca-v3
   tag: latest
   pullPolicy: IfNotPresent
 
