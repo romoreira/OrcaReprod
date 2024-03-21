@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: rca-secrets-access
+rules:
+  - apiGroups: [""]
+    resources: ["secrets", "configmaps", "serviceaccounts", "clusterrolebindings"]
+    verbs: ["create", "get", "list", "delete"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rca-secrets-access-binding
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: rca-secrets-access
+  apiGroup: rbac.authorization.k8s.io
+
